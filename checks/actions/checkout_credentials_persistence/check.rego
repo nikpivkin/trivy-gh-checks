@@ -15,7 +15,7 @@
 #   provider: github-actions
 #   severity: MEDIUM
 #   short_code: checkout-persist-credentials
-#   recommended_action: Set 'persist-credentials' to false on æactions/checkout' steps unless git push access is explicitly required.
+#   recommended_action: Set 'persist-credentials' to false on 'actions/checkout' steps unless git push access is explicitly required.
 #   input:
 #     selector:
 #       - type: yaml
