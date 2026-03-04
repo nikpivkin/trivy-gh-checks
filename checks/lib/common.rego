@@ -8,7 +8,9 @@ package github.lib.common
 
 import rego.v1
 
-checks_config := data.github.actions.config
+default checks_config := {}
+
+checks_config := data.github.config
 
 check_config(metadata) := object.get(
 	checks_config,

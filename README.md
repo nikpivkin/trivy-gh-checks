@@ -42,10 +42,9 @@ Example:
 
 ```yaml
 github:
-  actions:
-    config:
-      GHA-0010: # checkout-persist-credentials
-        disabled: true
+  config:
+    GHA-0010: # checkout-persist-credentials
+      disabled: true
 ```
 
 In this example, the check with ID `GHA-0010` is completely skipped during scanning.
@@ -61,13 +60,12 @@ Example configuration:
 
 ```yaml
 github:
-    actions:
-        config:
-            trusted-dependency-sources:
-                patterns:
-                    - actions/
-                    - docker/
-                    - oras-project/setup-oras/
+    config:
+        trusted-dependency-sources:
+            patterns:
+                - actions/
+                - docker/
+                - oras-project/setup-oras/
 ```
 
 The `patterns` field accepts a list of repository or organization path prefixes 

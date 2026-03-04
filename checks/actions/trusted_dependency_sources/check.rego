@@ -29,8 +29,6 @@ import data.github.lib.common
 
 metadata := common.package_metadata(rego.metadata.chain())
 
-default trusted_sources := {}
-
 config := common.check_config(metadata)
 
 deny contains common.report(metadata, job) if {
