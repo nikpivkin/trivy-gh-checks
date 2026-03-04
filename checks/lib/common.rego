@@ -8,9 +8,17 @@ package github.lib.common
 
 import rego.v1
 
-is_check_applayble(metadata) := true
+checks_config := data.github.actions.config
 
-is_hardened_level_satisfies(metadata) if {}
+check_config(metadata) := object.get(
+	checks_config,
+	metadata.annotations.custom.id,
+	object.get(
+		checks_config,
+		metadata.annotations.custom.short_code,
+		{},
+	),
+)
 
 package_metadata(chain) := metadata if {
 	some metadata in chain
@@ -19,7 +27,14 @@ package_metadata(chain) := metadata if {
 
 title(metadata) := object.get(metadata.annotations, ["title"], "<no_title>")
 
-report(metadata, ctx) := result.new(sprintf("%s\n%s", [title(metadata), build_evidence_string(ctx)]), {})
+is_check_disabled(cfg) if {
+	cfg.disabled == true
+} else := false
+
+report(metadata, ctx) := res if {
+	not is_check_disabled(check_config(metadata))
+	res := result.new(sprintf("%s\n%s", [title(metadata), build_evidence_string(ctx)]), {})
+}
 
 build_evidence_string(ctx) := evidence if {
 	ctx.kind == "workflow"

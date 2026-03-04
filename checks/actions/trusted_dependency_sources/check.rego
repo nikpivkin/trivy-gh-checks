@@ -31,23 +31,23 @@ metadata := common.package_metadata(rego.metadata.chain())
 
 default trusted_sources := {}
 
-trusted_sources := data.github.actions.config.trusted_sources.patterns
+config := common.check_config(metadata)
 
 deny contains common.report(metadata, job) if {
 	some job in actions.jobs
-	count(trusted_sources) > 0
+	count(config.patterns) > 0
 	artifact_from_untrusted_source(job.uses)
 }
 
 deny contains common.report(metadata, step) if {
 	some step in actions.steps
-	count(trusted_sources) > 0
+	count(config.patterns) > 0
 	artifact_from_untrusted_source(step.uses)
 }
 
 deny contains common.report(metadata, step) if {
 	some step in actions.composite_steps
-	count(trusted_sources) > 0
+	count(config.patterns) > 0
 	artifact_from_untrusted_source(step.uses)
 }
 
@@ -55,6 +55,6 @@ artifact_from_untrusted_source(uses) if {
 	not actions.is_local_action(uses)
 	not actions.is_docker_action(uses)
 	ref := split(uses, "@")[0]
-	some trusted_source in trusted_sources
-	not startswith(ref, trusted_source)
+	some pattern in config.patterns
+	not startswith(ref, pattern)
 }

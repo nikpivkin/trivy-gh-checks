@@ -28,6 +28,28 @@ Example usage:
 trivy conf . --config-data config.yaml
 ```
 
+Each check can be configured using its ID or short code from metadata.
+
+### Disabling checks
+
+Any check can be disabled explicitly via configuration by setting:
+
+```yaml
+disabled: true
+```
+
+Example:
+
+```yaml
+github:
+  actions:
+    config:
+      GHA-0010: # checkout-persist-credentials
+        disabled: true
+```
+
+In this example, the check with ID `GHA-0010` is completely skipped during scanning.
+
 ### trusted-dependency-sources
 
 By default, the `trusted-dependency-sources` check is not applied until it is 
@@ -41,7 +63,7 @@ Example configuration:
 github:
     actions:
         config:
-            trusted_sources:
+            trusted-dependency-sources:
                 patterns:
                     - actions/
                     - docker/
