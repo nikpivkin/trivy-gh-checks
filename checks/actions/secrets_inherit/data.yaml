@@ -1,0 +1,11 @@
+name: Reusable Workflow Caller
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-reusable-workflow:
+    uses: org/reusable-workflow/.github/workflows/build.yml@v1
+    secrets: inherit

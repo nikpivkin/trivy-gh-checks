@@ -1,0 +1,14 @@
+name: Secret leakage CI
+
+env:
+  SECRETS: ${{ toJson(secrets) }}   # ← violation
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run build
+        run: echo build
