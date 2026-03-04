@@ -31,7 +31,7 @@ metadata := common.package_metadata(rego.metadata.chain())
 
 default trusted_sources := {}
 
-trusted_sources := data.github.actions.config.trusted_sources
+trusted_sources := data.github.actions.config.trusted_sources.patterns
 
 deny contains common.report(metadata, job) if {
 	some job in actions.jobs

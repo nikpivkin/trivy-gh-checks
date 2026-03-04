@@ -42,10 +42,11 @@ github:
     actions:
         config:
             trusted_sources:
-                - actions/
-                - docker/
-                - oras-project/setup-oras/
+                patterns:
+                    - actions/
+                    - docker/
+                    - oras-project/setup-oras/
 ```
 
-The `trusted_sources` field accepts a list of repository or organization path prefixes 
+The `patterns` field accepts a list of repository or organization path prefixes 
 that are considered trusted.
