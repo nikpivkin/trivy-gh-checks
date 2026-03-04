@@ -8,10 +8,18 @@ package github.lib.actions
 
 import rego.v1
 
+# https://github.com/SchemaStore/schemastore/blob/50c67fbe14831dedee0fbf4215623021152abc8f/src/schemas/json/github-workflow.json#L1838
+is_workflow if {
+	input.on
+	input.jobs
+}
+
 workflow := object.union(input, {
 	"kind": "workflow",
 	"workflow_name": object.get(input, "name", ""),
-})
+}) if {
+	is_workflow
+}
 
 jobs contains object.union(raw_job, {
 	"kind": "job",
@@ -19,6 +27,7 @@ jobs contains object.union(raw_job, {
 	"job_key": job_key,
 	"job_name": object.get(raw_job, "name", ""),
 }) if {
+	is_workflow
 	some job_key, raw_job in input.jobs
 }
 
@@ -30,6 +39,7 @@ steps contains object.union(raw_step, {
 	"step_index": step_index,
 	"step_name": object.get(raw_step, "name", ""),
 }) if {
+	is_workflow
 	some job_key, job in input.jobs
 	some step_index, raw_step in job.steps
 }

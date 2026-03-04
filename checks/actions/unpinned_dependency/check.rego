@@ -48,4 +48,3 @@ is_untrusted_external_dependency(uses) if {
 	not actions.is_docker_action(uses)
 	not actions.is_pinned_to_full_sha(uses)
 }
-
