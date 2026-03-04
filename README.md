@@ -35,7 +35,7 @@ Each check can be configured using its ID or short code from metadata.
 Any check can be disabled explicitly via configuration by setting:
 
 ```yaml
-disabled: true
+disable: true
 ```
 
 Example:
@@ -44,7 +44,7 @@ Example:
 github:
   config:
     GHA-0010: # checkout-persist-credentials
-      disabled: true
+      disable: true
 ```
 
 In this example, the check with ID `GHA-0010` is completely skipped during scanning.

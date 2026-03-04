@@ -30,7 +30,7 @@ package_metadata(chain) := metadata if {
 title(metadata) := object.get(metadata.annotations, ["title"], "<no_title>")
 
 is_check_disabled(cfg) if {
-	cfg.disabled == true
+	cfg.disable == true
 } else := false
 
 report(metadata, ctx) := res if {
