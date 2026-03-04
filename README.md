@@ -51,8 +51,10 @@ In this example, the check with ID `GHA-0010` is completely skipped during scann
 
 ### trusted-dependency-sources
 
-By default, the `trusted-dependency-sources` check is not applied until it is 
-explicitly configured.
+The `trusted-dependency-sources` check ensures that dependency updates are only
+allowed from repositories or organizations that are considered trusted sources.
+
+By default, the check is not applied until it is explicitly configured.
 
 To enable it, you must specify a list of trusted action and dependency sources.
 
@@ -60,13 +62,34 @@ Example configuration:
 
 ```yaml
 github:
-    config:
-        trusted-dependency-sources:
-            patterns:
-                - actions/
-                - docker/
-                - oras-project/setup-oras/
+  config:
+    trusted-dependency-sources:
+      patterns:
+          - actions/
+          - docker/
+          - oras-project/setup-oras/
 ```
 
 The `patterns` field accepts a list of repository or organization path prefixes 
 that are considered trusted.
+
+### dependabot-cooldown
+
+The `dependabot-cooldown` check ensures that dependency update pull requests
+are not merged immediately after being opened.
+
+By default, the minimum required waiting period is 7 days.
+
+You can customize this behavior by configuring the `minimum_days` attribute.
+
+Example configuration:
+
+```yaml
+github:
+  config:
+    dependabot-cooldown:
+      minimum_days: 14
+```
+
+The `minimum_days` field defines the minimum number of days that must pass
+before a Dependabot pull request is eligible for merging.

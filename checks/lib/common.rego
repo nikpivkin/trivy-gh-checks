@@ -35,8 +35,13 @@ is_check_disabled(cfg) if {
 
 report(metadata, ctx) := res if {
 	not is_check_disabled(check_config(metadata))
-	res := result.new(sprintf("%s\n%s", [title(metadata), build_evidence_string(ctx)]), {})
+	res := result.new(
+		sprintf("%s\n%s", [message(metadata, ctx), build_evidence_string(ctx)]),
+		{},
+	)
 }
+
+message(metadata, ctx) := object.get(ctx, "message", title(metadata))
 
 build_evidence_string(ctx) := evidence if {
 	ctx.kind == "workflow"
@@ -86,6 +91,23 @@ build_evidence_string(ctx) := evidence if {
 	])
 }
 
+build_evidence_string(ctx) := "Dependabot" if {
+	ctx.kind == "dependabot"
+}
+
+build_evidence_string(ctx) := evidence if {
+	ctx.kind == "dependabot_update"
+	evidence := concat("\n", [
+		sprintf("Ecosystem: %v (index %v)", [
+			object.get(ctx, "ecosystem_name", "-"),
+			object.get(ctx, "ecosystem_index", "-"),
+		]),
+	])
+}
+
 build_evidence_string(ctx) := "-" if {
-	not ctx.kind in {"workflow", "job", "step", "composite_action", "composite_step"}
+	not ctx.kind in {
+		"workflow", "job", "step", "composite_action",
+		"composite_step", "dependabot", "dependabot_update",
+	}
 }
