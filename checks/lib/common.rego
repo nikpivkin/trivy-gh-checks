@@ -97,12 +97,10 @@ build_evidence_string(ctx) := "Dependabot" if {
 
 build_evidence_string(ctx) := evidence if {
 	ctx.kind == "dependabot_update"
-	evidence := concat("\n", [
-		sprintf("Ecosystem: %v (index %v)", [
-			object.get(ctx, "ecosystem_name", "-"),
-			object.get(ctx, "ecosystem_index", "-"),
-		]),
-	])
+	evidence := concat("\n", [sprintf("Ecosystem: %v (index %v)", [
+		object.get(ctx, "ecosystem_name", "-"),
+		object.get(ctx, "ecosystem_index", "-"),
+	])])
 }
 
 build_evidence_string(ctx) := "-" if {

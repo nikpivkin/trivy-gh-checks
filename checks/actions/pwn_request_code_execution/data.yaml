@@ -1,0 +1,24 @@
+on:
+  pull_request_target:
+   types:
+     - opened
+
+jobs:
+  integrations-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+      - name: Install Dependencies
+        run: cd test-stacks && yarn install
+      - name: Integration Test - Local
+        uses: ./
+        with:
+          workingDirectory: ./test-stacks
+          stackName: "test-stack"
+          mode: plan-only
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          commentOnPr: false

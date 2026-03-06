@@ -21,28 +21,32 @@ workflow := object.union(input, {
 	is_workflow
 }
 
-jobs contains object.union(raw_job, {
+jobs contains enrich_job(job, job_key) if {
+	is_workflow
+	some job_key, job in input.jobs
+}
+
+enrich_job(job, job_key) := object.union(job, {
 	"kind": "job",
 	"workflow_name": object.get(input, "name", ""),
 	"job_key": job_key,
-	"job_name": object.get(raw_job, "name", ""),
-}) if {
-	is_workflow
-	some job_key, raw_job in input.jobs
-}
-
-steps contains object.union(raw_step, {
-	"kind": "step",
-	"workflow_name": object.get(input, "name", ""),
-	"job_key": job_key,
 	"job_name": object.get(job, "name", ""),
-	"step_index": step_index,
-	"step_name": object.get(raw_step, "name", ""),
-}) if {
+})
+
+steps contains enrich_step(enrich_job(job, job_key), step, step_index) if {
 	is_workflow
 	some job_key, job in input.jobs
-	some step_index, raw_step in job.steps
+	some step_index, step in job.steps
 }
+
+enrich_step(job, step, step_index) := object.union(step, {
+	"kind": "step",
+	"workflow_name": object.get(input, "name", ""),
+	"job_key": object.get(job, "job_key", ""),
+	"job_name": object.get(job, "name", ""),
+	"step_index": step_index,
+	"step_name": object.get(step, "name", ""),
+})
 
 default is_composite_action := false
 
@@ -94,4 +98,16 @@ is_local_action(uses) if {
 
 is_docker_action(uses) if {
 	startswith(uses, "docker://")
+}
+
+workflow_has_trigger(trigger) if {
+	is_array(workflow.on)
+	some t in workflow.on
+	t == trigger
+}
+
+workflow_has_trigger(trigger) if {
+	is_object(workflow.on)
+	some t, _ in workflow.on
+	t == trigger
 }
